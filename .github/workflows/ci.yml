@@ -1,0 +1,82 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  quality:
+    name: Lint, tests, build y SonarQube
+    runs-on: ubuntu-latest
+    env:
+      # Opcionales. Si no están definidos, el paso de SonarQube se omite:
+      # un runner de GitHub no puede llegar a un SonarQube en localhost.
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Instalar pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.13.1
+
+      - name: Instalar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Instalar dependencias
+        run: pnpm install --frozen-lockfile --ignore-scripts
+
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Typecheck
+        run: pnpm run typecheck
+
+      - name: Tests de frontend y backend con cobertura
+        run: pnpm run test:coverage
+
+      - name: Build del Worker
+        run: pnpm run build
+
+      - name: Buscar secretos con gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
+
+      - name: Diagnóstico SonarQube
+        run: |
+          if [ -z "${SONAR_TOKEN:-}" ] || [ -z "${SONAR_HOST_URL:-}" ]; then
+            echo "SONAR_TOKEN/SONAR_HOST_URL no configurados; se omite SonarQube."
+            exit 0
+          fi
+          docker run --rm \
+            -e SONAR_HOST_URL \
+            -e SONAR_TOKEN \
+            -v "$PWD:/usr/src" \
+            sonarsource/sonar-scanner-cli:latest
+
+      - name: Guardar reporte de cobertura
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage/
+          retention-days: 7

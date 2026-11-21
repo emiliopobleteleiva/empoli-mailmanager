@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX `tasks_series_due_unique` ON `tasks` (`series_id`,`due`);

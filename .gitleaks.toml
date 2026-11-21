@@ -1,0 +1,18 @@
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Archivos generados, dependencias o de ejemplo sin secretos reales"
+paths = [
+  '''pnpm-lock\.yaml''',
+  '''\.env\.example''',
+  '''node_modules/.*''',
+  '''dist/.*''',
+  '''coverage/.*''',
+  '''\.pnpm-store/.*''',
+  '''\.next/.*''',
+  '''\.wrangler/.*''',
+  '''\.sites-runtime/.*''',
+  '''\.scannerwork/.*''',
+  '''vendor/.*''',
+]

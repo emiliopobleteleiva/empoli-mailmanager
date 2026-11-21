@@ -1,0 +1,47 @@
+services:
+  arpoli:
+    build: .
+    image: arpoli-mailmanager:local
+    container_name: arpoli-mailmanager
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    environment:
+      # Identidad demo (solo si no configuras Microsoft Entra ID).
+      DEMO_USER_EMAIL: ${DEMO_USER_EMAIL:-ana.torres@example.com}
+      DEMO_USER_NAME: ${DEMO_USER_NAME:-Ana Torres}
+      # Login real con Microsoft Entra ID. Si defines las cuatro primeras,
+      # el proxy exige login de Microsoft y deja de usar el usuario demo.
+      MS_TENANT_ID: ${MS_TENANT_ID:-}
+      MS_CLIENT_ID: ${MS_CLIENT_ID:-}
+      MS_CLIENT_SECRET: ${MS_CLIENT_SECRET:-}
+      SESSION_SECRET: ${SESSION_SECRET:-}
+      MS_REDIRECT_URI: ${MS_REDIRECT_URI:-http://localhost:3000/auth/callback}
+      ALLOWED_EMAIL_DOMAIN: ${ALLOWED_EMAIL_DOMAIN:-}
+      # Allowlist de personas autorizadas (JSON). Vacío = demo ficticia.
+      AUTHORIZED_PEOPLE: ${AUTHORIZED_PEOPLE:-}
+      # Correo saliente vía Microsoft Graph (Outlook / Microsoft 365).
+      MAIL_PILOT_SENDER: ${MAIL_PILOT_SENDER:-}
+      MAIL_PILOT_RECIPIENT: ${MAIL_PILOT_RECIPIENT:-}
+      MCP_OWNER_EMAIL: ${MCP_OWNER_EMAIL:-}
+      # IA opcional.
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      TZ: America/Santiago
+    volumes:
+      # D1 + R2 locales viven acá: sobreviven a reinicios y recreaciones.
+      - arpoli-data:/app/.wrangler/state
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:3000/').then((r) => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+
+volumes:
+  arpoli-data:

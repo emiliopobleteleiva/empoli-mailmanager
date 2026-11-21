@@ -1,0 +1,48 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1794846835011,
+      "tag": "0000_low_whiplash",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1794863554406,
+      "tag": "0001_dazzling_obadiah_stane",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1794944365137,
+      "tag": "0002_quick_romulus",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1794944385989,
+      "tag": "0003_cynical_legion",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1794945068166,
+      "tag": "0004_loving_wonder_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1794949157232,
+      "tag": "0005_flowery_the_santerians",
+      "breakpoints": true
+    }
+  ]
+}

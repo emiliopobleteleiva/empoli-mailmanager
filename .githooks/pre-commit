@@ -1,0 +1,12 @@
+#!/bin/sh
+set -eu
+
+cd "$(git rev-parse --show-toplevel)"
+
+if ! command -v gitleaks >/dev/null 2>&1; then
+  echo "⚠ gitleaks no está instalado; se omite el escaneo de secretos." >&2
+  exit 0
+fi
+
+echo "▶ gitleaks: buscando secretos en los cambios staged..."
+gitleaks git --pre-commit --staged --redact --no-banner
