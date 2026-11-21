@@ -17,13 +17,13 @@ export default defineConfig({
   test: {
     environment: "happy-dom",
     setupFiles: ["./tests/setup.ts"],
-    include: ["tests/**/*.test.{ts,tsx}"],
+    include: ["tests/**/*.test.{ts,tsx,mjs}"],
     restoreMocks: true,
     coverage: {
       provider: "v8",
       reporter: ["text", "lcov"],
       reportsDirectory: "coverage",
-      include: ["app/**/*.{ts,tsx}", "lib/**/*.ts"],
+      include: ["app/**/*.{ts,tsx}", "lib/**/*.ts", "docker/*.mjs"],
       exclude: ["app/**/*.d.ts", "app/arpoli.css", "app/globals.css"],
     },
   },

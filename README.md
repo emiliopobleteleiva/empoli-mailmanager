@@ -79,7 +79,7 @@ Flujo: `/auth/signin` redirige a Microsoft, `/auth/callback` valida el token y c
 
 ### Tests
 
-Hay dos suites con Vitest: `tests/frontend/` (React + Testing Library) y `tests/backend/` (rutas de `app/api`, MCP, Graph y un D1 falso). Actualmente son **105 tests en 17 archivos**, con ~65% de statements y ~91% de líneas.
+Hay tres suites con Vitest: `tests/frontend/` (React + Testing Library), `tests/backend/` (rutas de `app/api`, MCP, Graph y un D1 falso) y `tests/proxy/` (flujo OAuth del proxy con un proveedor Microsoft falso). Actualmente son **139 tests en 19 archivos**, con ~69% de statements y ~91% de líneas; `docker/auth-lib.mjs` queda en ~98% de líneas.
 
 ```sh
 pnpm install
